@@ -34,6 +34,10 @@ AUTH_USER_MODEL = 'UserDetails.User'
 # Application definition
 
 INSTALLED_APPS = [
+    # Install dal before django.contrib.admin
+    'dal',
+    'dal_select2',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +55,7 @@ INSTALLED_APPS = [
     'Dining.apps.DiningConfig',
     'CreditManagement.apps.CreditManagementConfig',
     'General.apps.GeneralConfig',
+    'QueryAPI.apps.QueryapiConfig'
 ]
 
 MIDDLEWARE = [
