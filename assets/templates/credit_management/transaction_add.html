@@ -10,3 +10,9 @@
         </form>
     </div>
 {% endblock %}
+
+{% block post_scripts %}
+<span style="color: #000;">
+    {{ slot_form.media }}
+</span>
+{% endblock %}

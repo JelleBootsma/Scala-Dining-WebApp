@@ -30,6 +30,7 @@ urlpatterns = [
     path('association/<association_name>/', include('UserDetails.urls_association')),
     path('credit/', include('CreditManagement.urls')),
     path('site/', include('General.urls')),
+    path('API/', include('QueryAPI.urls')),
     path('', include('Dining.urls')),
     # Quadrivium OpenID Connect
     path('oidc/', include('mozilla_django_oidc.urls')),

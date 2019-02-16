@@ -1,5 +1,7 @@
 from django import forms
 from .models import *
+from dal import autocomplete
+
 
 class TransactionForm(forms.ModelForm):
     origin = forms.CharField(disabled=True)
@@ -20,6 +22,16 @@ class TransactionForm(forms.ModelForm):
     class Meta:
         model = PendingTransaction
         fields = ['origin', 'amount', 'target_user', 'target_association']
+        widgets = {
+            'target_user': autocomplete.ModelSelect2(
+                url='api_user',
+                attrs={
+                    # Set some placeholder
+                    'data-placeholder': 'Search for user',
+                    # Only trigger autocompletion after 3 characters have been typed
+                    'data-minimum-input-length': 3,
+                }, )
+        }
 
     def save(self):
         self.instance.save()
