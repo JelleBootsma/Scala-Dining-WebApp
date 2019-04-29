@@ -39,6 +39,34 @@ class ServeTimeCheckMixin:
         return serve_time
 
 
+class PaymentlinkCorrectnessMixin:
+    """
+    Mixin that ensures that the string is a valid url
+    """
+
+    def clean_payment_link(self):
+        url = self.cleaned_data['payment_link']
+        url_match = "https://www."
+        min_length_match = 3
+        # While the url_start string is not finished
+        for i_match in range(0, len(url_match) - min_length_match):
+            # If te symbols in both places is the same
+            if url_match[i_match] == url[0]:
+                rem_length = len(url_match) - i_match
+                # create a loop for the remaining places to check
+                for t in range(1, rem_length):
+                    # If signals do not match, break the loop
+                    if url_match[i_match + t] != url[t]:
+                        break
+                    # If end is reached
+                    if t == rem_length - 1:
+                        # Merge the two strings and return the result
+                        result = url_match[:-rem_length] + url
+                        return result
+
+        raise ValidationError(_("Payment link is not a valid url"))
+
+
 class CreateSlotForm(ServeTimeCheckMixin, forms.ModelForm):
     class Meta:
         model = DiningList
@@ -123,7 +151,7 @@ class DiningInfoForm(ServeTimeCheckMixin, forms.ModelForm):
         self.instance.save(update_fields=self.Meta.fields)
 
 
-class DiningPaymentForm(forms.ModelForm):
+class DiningPaymentForm(PaymentlinkCorrectnessMixin, forms.ModelForm):
     dinner_cost_total = forms.DecimalField(decimal_places=2, max_digits=5, initial=Decimal(0.00),
                                            validators=[MinValueValidator(Decimal('0.00'))])
 
