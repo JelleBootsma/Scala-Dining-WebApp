@@ -4,6 +4,7 @@ from django.db.models import OuterRef, Exists
 from django.db import transaction
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError, PermissionDenied
+from django.core.validators import URLValidator
 
 from UserDetails.models import Association, User
 from .models import DiningList, DiningEntry, DiningEntryUser, DiningEntryExternal, DiningComment
@@ -62,9 +63,14 @@ class PaymentlinkCorrectnessMixin:
                     if t == rem_length - 1:
                         # Merge the two strings and return the result
                         result = url_match[:-rem_length] + url
+
+                        validate = URLValidator(verify_exists=True)
+                        validate(result)
                         return result
 
-        raise ValidationError(_("Payment link is not a valid url"))
+        validate = URLValidator(verify_exists=True)
+        validate(url)
+        return url
 
 
 class CreateSlotForm(ServeTimeCheckMixin, forms.ModelForm):
